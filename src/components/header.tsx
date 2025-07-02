@@ -1,8 +1,6 @@
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, Avatar} from "@heroui/react";
+import {Navbar, NavbarBrand, NavbarContent, NavbarItem} from "@heroui/react";
 import { Input } from "@heroui/input";
-import { Popover, PopoverTrigger, PopoverContent } from "@heroui/popover";
-import { auth, signIn, signOut  } from "@/auth";
-import * as section from "@/section";
+import HeaderAuth from "./header-auth";
 
 
 
@@ -20,58 +18,6 @@ export const AcmeLogo = () => {
 };
 
 export default async function Header() {
-    const session = await auth();
-    let authContent = null;
-    if (session?.user) {
-        authContent = (
-            <Popover placement="bottom">
-                <PopoverTrigger>
-                    <Avatar 
-                        src={session.user.image || "https://i.pravatar.cc/150?u=a042581f4e29026024d"} 
-                        className="cursor-pointer"
-                    />
-                </PopoverTrigger>
-                <PopoverContent>
-                    <div className="px-4 py-3">
-                        <div className="text-small font-bold">{session.user.name}</div>
-                        <div className="text-tiny text-gray-500">{session.user.email}</div>
-                        <div className="mt-2">
-                            <form
-                                action={section.signOut}
-                            >
-                                <Button type='submit' color="danger" variant="flat" size="sm">
-                                    Sign Out
-                                </Button>
-                            </form>
-                        </div>
-                    </div>
-                </PopoverContent>
-            </Popover>
-        )
-    }else{
-        authContent = (
-            <>
-                <NavbarItem className="hidden lg:flex">
-                <form
-                    action={section.signIn}>
-                    <Button  type='submit'  color="primary" href="#" variant="bordered">
-                        Sign In
-                    </Button>
-                </form>
-                </NavbarItem>
-
-                <NavbarItem>    
-                <form
-                    action={section.signIn}>
-                    <Button type='submit' color="primary" href="#" >
-                        Sign Up
-                    </Button>
-                </form>
-                </NavbarItem>
-            </>
-        )
-    }
-
     
   return (
     <Navbar className="border-b-1 border-gray-200">
@@ -88,7 +34,7 @@ export default async function Header() {
       </NavbarContent>
 
       <NavbarContent justify="end">
-        {authContent}
+        <HeaderAuth />
       </NavbarContent>
     </Navbar>
   );
