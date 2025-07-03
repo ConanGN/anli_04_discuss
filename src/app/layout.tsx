@@ -35,7 +35,10 @@ export default function RootLayout({
         <SessionProvider>
         <HeroUIProvider>
           <Header />
+          <div className="max-w-[1024px] px-6 mt-5 mx-auto">         
+          {/* <div className="z-40 flex px-6 gap-4 w-full flex-row relative flex-nowrap items-center justify-between h-[var(--navbar-height)] max-w-[1024px]"> */}
           {children}
+          </div>
         </HeroUIProvider>
         </SessionProvider>
       </body>

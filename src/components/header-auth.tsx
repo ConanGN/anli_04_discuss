@@ -30,10 +30,9 @@ export default  function HeaderAuth() {
             <Popover placement="bottom">
                 <PopoverTrigger>
                     <Avatar 
-                        src={session.user.image || undefined} 
+                        src={session.user.image || "/vercel.svg"} 
                         size="md"
                         className="cursor-pointer"
-                        showFallback
                     />
                 </PopoverTrigger>
                 <PopoverContent>
