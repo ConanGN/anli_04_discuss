@@ -27,7 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    // 解决hydration warning  和浏览器插件冲突报错
+    <html lang="en" suppressHydrationWarning={true}> 
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

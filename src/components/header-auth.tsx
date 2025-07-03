@@ -3,6 +3,8 @@ import {NavbarItem,  Button, Avatar} from "@heroui/react";
 import { Popover, PopoverTrigger, PopoverContent } from "@heroui/react";
 import * as section from "@/section";
 import { useSession } from "next-auth/react"
+import Spinner from "@/components/spinner"
+
 
 
 export const AcmeLogo = () => {
@@ -19,15 +21,19 @@ export const AcmeLogo = () => {
 };
 
 export default  function HeaderAuth() {
-    const { data: session } =  useSession();
+    const { data: session, status } =  useSession();
     let authContent = null;
-    if (session?.user) {
+    if (status == 'loading'){
+        authContent = <Spinner />
+    }else if (session?.user) {
         authContent = (
             <Popover placement="bottom">
                 <PopoverTrigger>
                     <Avatar 
-                        src={session.user.image || "https://i.pravatar.cc/150?u=a042581f4e29026024d"} 
+                        src={session.user.image || undefined} 
+                        size="md"
                         className="cursor-pointer"
+                        showFallback
                     />
                 </PopoverTrigger>
                 <PopoverContent>
