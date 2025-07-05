@@ -1,9 +1,9 @@
 'use client'
-import {NavbarItem,  Button, Avatar} from "@heroui/react";
+import {NavbarItem,  Button, Avatar, Spinner} from "@heroui/react";
 import { Popover, PopoverTrigger, PopoverContent } from "@heroui/react";
 import * as section from "@/section";
 import { useSession } from "next-auth/react"
-import Spinner from "@/components/spinner"
+
 
 
 
@@ -24,7 +24,7 @@ export default  function HeaderAuth() {
     const { data: session, status } =  useSession();
     let authContent = null;
     if (status == 'loading'){
-        authContent = <Spinner />
+        authContent = <Spinner color="secondary" size="sm" />
     }else if (session?.user) {
         authContent = (
             <Popover placement="bottom">
