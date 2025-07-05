@@ -1,26 +1,60 @@
+// 声明这是一个客户端组件，在浏览器中运行
+"use client"
+// 从 HeroUI 导入需要的组件：按钮、弹出框、弹出框触发器、弹出框内容
 import { Button, Popover, PopoverTrigger, PopoverContent} from "@heroui/react";
-import React from "react";
+// 从 React 导入核心库和 useActionState 钩子
+import React, { useActionState } from "react";
+// 从 HeroUI 导入输入框和文本域组件
 import { Input, Textarea } from "@heroui/react";
+// 导入所有的服务器端操作函数
 import * as section from "@/section";
 
-
-
+// 导出默认的主题创建表单组件
 export default function TopicCreateForm(){
+    // 使用 useActionState 钩子管理表单状态
+    // section.createTopic: 表单提交时要调用的服务器端函数
+    // {errors: {}}: 初始状态，包含空的错误对象
+    // state: 当前状态，包含错误信息
+    // formAction: 表单提交函数，会触发 createTopic 服务器端函数
+    const [state, formAction] = useActionState(section.createTopic, {errors: {}})
+
+    // 返回组件的 JSX 结构
     return(
         
+        // 创建一个弹出框，位置设置为左侧
         <Popover placement="left">
-            {/*   点击按钮触发，用PopoverTrigger包裹按钮 */}
+            {/* 弹出框触发器，点击时显示弹出框内容 */}
         <PopoverTrigger> 
+            {/* 触发按钮，secondary 颜色，bordered 边框样式 */}
             <Button color="secondary" variant='bordered'>Create a Topic</Button>
         </PopoverTrigger>
+        {/* 弹出框的内容区域 */}
         <PopoverContent>
-        <form action={section.createTopic}>
+        {/* 表单元素，action 属性绑定 formAction 函数 */}
+        <form action={formAction}>
+            {/* 表单容器，使用 flexbox 布局，垂直排列，间距为 4，内边距为 4，宽度为 80 */}
             <div className="flex flex-col gap-4 p-4 w-80">
+                {/* 表单标题 */}
                 <h3 className="text-lg font-bold">Create a Topic</h3>
-                {/* heroui导入Input label文字name在外面展示=labelPlacement*/}
-                <Input name="name" label="Name" labelPlacement="outside" placeholder="name" /> 
-                {/* heroui导入Textarea */}
-                <Textarea name="description" label="Description" labelPlacement="outside" placeholder="descript your topic" /> 
+                {/* 主题名称输入框 */}
+                {/* name: 表单字段名称，用于服务器端获取数据 */}
+                {/* label: 输入框标签文本 */}
+                {/* labelPlacement: 标签位置，outside 表示在输入框外部 */}
+                {/* placeholder: 占位符文本 */}
+                {/* isInvalid: 错误状态，!!将可能的 undefined 转换为布尔值 */}
+                {/* errorMessage: 错误消息，显示第一个错误信息 */}
+                <Input name="name" label="Name" labelPlacement="outside" placeholder="name" isInvalid={!!state.errors.name} errorMessage={state.errors.name?.join(", ")}/> 
+                {/* 主题描述文本域 */}
+                {/* name: 表单字段名称 */}
+                {/* label: 文本域标签 */}
+                {/* labelPlacement: 标签位置 */}
+                {/* placeholder: 占位符文本 */}
+                {/* isInvalid: 错误状态检查 */}
+                {/* errorMessage: 显示错误数组的第一个错误信息 */}
+                <Textarea name="description" label="Description" labelPlacement="outside" placeholder="descript your topic" isInvalid={!!state.errors.description} errorMessage={state.errors.description?.[0]}/> 
+                {/* 表单提交按钮 */}
+                {/* type: 按钮类型为 submit，点击时会触发表单提交 */}
+                {/* color: 按钮颜色为主色调 */}
                 <Button type="submit" color="primary">Submit</Button>
             </div>
         </form>
