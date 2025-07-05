@@ -1,7 +1,7 @@
 // 声明这是一个客户端组件，在浏览器中运行
 "use client"
 // 从 HeroUI 导入需要的组件：按钮、弹出框、弹出框触发器、弹出框内容
-import { Button, Popover, PopoverTrigger, PopoverContent} from "@heroui/react";
+import { Button, Popover, PopoverTrigger, PopoverContent, Chip} from "@heroui/react";
 // 从 React 导入核心库和 useActionState 钩子
 import React, { useActionState, startTransition } from "react";
 // 从 HeroUI 导入输入框和文本域组件
@@ -75,6 +75,11 @@ export default function TopicCreateForm(){
                 {/* isInvalid: 错误状态检查 */}
                 {/* errorMessage: 显示错误数组的第一个错误信息 */}
                 <Textarea name="description" label="Description" labelPlacement="outside" placeholder="descript your topic" isInvalid={!!state.errors.description} errorMessage={state.errors.description?.[0]}/> 
+                
+                {/* 通用的表单错误  不针对特定字段、影响整个表单操作的错误类型！ */}
+                {state.errors._form && <Chip variant="bordered"  className="max-w-full">
+                    {state.errors._form.join(", ")}</Chip>}
+                
                 {/* 表单提交按钮 */}
                 {/* type: 按钮类型为 submit，点击时会触发表单提交 */}
                 {/* color: 按钮颜色为主色调 */}
