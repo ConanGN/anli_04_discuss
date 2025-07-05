@@ -54,7 +54,7 @@ export default function TopicCreateForm(){
         {/* 弹出框的内容区域 */}
         <PopoverContent>
         {/* 表单元素，action 属性绑定 formAction 函数 */}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
             {/* 表单容器，使用 flexbox 布局，垂直排列，间距为 4，内边距为 4，宽度为 80 */}
             <div className="flex flex-col gap-4 p-4 w-80">
                 {/* 表单标题 */}
