@@ -20,6 +20,11 @@ model User {
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+
+  topics Topic[] // 用户创建的话题  一个用户下有多个话题
+  posts Post[] // 用户发布的帖子 一个用户下有多个帖子
+  comments Comment[] // 用户发布的评论 一个用户下有多个评论
 }
  
 model Account {
@@ -77,4 +82,77 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
  
   @@id([userId, credentialID])
+}
+
+
+// 话题表 - 用于组织和分类内容
+model Topic {
+  id String @id @default(cuid()) // 唯一标识符，使用cuid()函数生成，保证全局唯一性
+  name String @unique // 话题名称，设置为唯一，防止重复话题
+  description String // 话题描述，帮助用户了解该话题的内容范围
+  createdAt DateTime @default(now()) // 创建时间，自动设置为当前时间
+  updatedAt DateTime @updatedAt // 更新时间，当记录更新时自动更新
+  // 缺少与帖子的关联关系，可以添加 posts Post[] 建立一对多关系
+
+  // 模型的外键和User模型的组件绑定 一个用户下有多个话题
+  // 字段名称 字段类型（目标模型名称） @relation(fields: [目标模型字段名称 外键], references: [目标模型主键字段名称 主键  ], onDelete: Cascade)
+  // onDelete: Cascade 级联删除 当用户删除时，一起删除该用户下的所有topic
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 话题下面有多个帖子
+  posts Post[]
+
+}
+
+// 帖子表 - 存储用户发布的内容
+model Post {
+  id String @id @default(cuid()) // 主键，使用cuid生成唯一ID
+  title String // 帖子标题
+  content String // 帖子内容，存储用户撰写的正文
+  createdAt DateTime @default(now()) // 创建时间戳，记录帖子发布时间
+  updatedAt DateTime @updatedAt // 更新时间戳，记录最后编辑时间
+  // 缺少作者关联(userId)和话题关联(topicId)
+  // 缺少与评论的关联关系，可以添加 comments Comment[] 建立一对多关系
+
+  // 模型的外键和User模型的组件绑定 一个用户下有多个帖子
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  //话题下面多个帖子
+  topicId String
+  topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  // 帖子下面有多个评论
+  comments Comment[]
+
+}
+
+// 评论表 - 存储用户对帖子的回复
+model Comment {
+  id String @id @default(cuid()) // 评论唯一标识符
+  content String // 评论内容，存储用户的回复文字
+  createdAt DateTime @default(now()) // 评论创建时间
+  updatedAt DateTime @updatedAt // 评论更新时间
+  // 缺少作者关联(userId)和帖子关联(postId)
+  // 缺少父评论关联，如果要支持嵌套评论功能
+
+  // 模型的外键和User模型的组件绑定 一个用户下有多个评论
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 帖子下面有多个评论
+  postId String
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  // 自关联 评论下面有多个子评论
+  // 父评论 可能有也可能没有  ？表示可选
+  parent Comment? @relation("ParentComment", fields: [parentId], references: [id])
+  // 父评论ID 可能有也可能没有  ？表示可选
+  parentId String?
+
+  // 子评论 可能有也可能没有  没有就是空[]
+  children Comment[] @relation("ParentComment")
+
+
 }
