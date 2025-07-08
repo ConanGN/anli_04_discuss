@@ -3,7 +3,7 @@
 // 导入 zod 库，用于数据校验和类型安全
 import {z} from "zod"
 import { auth } from "@/auth"
-import { promise } from "zod/v4"
+import { prisma } from "@/prisma"
 
 // 定义创建主题表单的状态接口，用于跟踪表单提交过程中的错误信息
 // interface 关键字用于声明一个类型，这里定义了表单状态的结构
@@ -55,6 +55,20 @@ export default async function createTopic(prevState: CreateTopicFormState, formD
         return {errors: {_form: ["请先登录"]}}
     }
     
+    // 创建话题 写入数据库
+    await prisma.topic.create({
+        data: {
+            name: result.data.name,
+            description: result.data.description,
+            userId: session.user.id!  //默认情况 session.user 中没有id
+        }
+    })
+
+
+    console.log(session.user.id, '0000---999')
+
+
+
     // 校验成功，返回空错误对象
     return {errors: {}}
 

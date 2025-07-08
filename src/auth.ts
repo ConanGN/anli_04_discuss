@@ -32,10 +32,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       else if (new URL(url).origin === baseUrl) return url
       return baseUrl
     },
+    session({ session, user }) {
+      // 在数据库会话策略下，使用 user 参数而不是 token
+      if (user) {
+        session.user.id = user.id
+      }
+      return session
+    },
   },
   // 添加错误页面配置
   pages: {
     error: '/auth/error', // 自定义错误页面
   },
 })
+
+
+
+
+
+
+
+
+
 
